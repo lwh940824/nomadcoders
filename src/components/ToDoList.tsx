@@ -1,14 +1,37 @@
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+    Categories,
+    categoryState,
+    toDoSelector,
+    toDoState,
+} from "../atoms";
+import CreateToDo from "./CreateToDo";
+import ToDo from "./ToDo";
 
 function ToDoList() {
-    
-    return <div>
-        <form onSubmit={}>
-            <input placeholder="Write a to do" />
-            <button>Add</button>
-        </form>
-    </div>;
+    const toDos = useRecoilValue(toDoSelector);
+    const [category, setCategory] = useRecoilState(categoryState);
+    const onInput = (event: React.FormEvent<HTMLSelectElement>) => {
+        setCategory(event.currentTarget.value as any);
+    };
+    console.log(toDos);
+
+    return (
+        <div>
+            <h1>To Dos</h1>
+            <hr />
+            <select value={category} onInput={onInput}>
+                <option value={Categories.TO_DO}>To Do</option>
+                <option value={Categories.DOING}>Doing</option>
+                <option value={Categories.DONE}>Done</option>
+            </select>
+            <CreateToDo />
+            {toDos?.map((toDo) => (
+                <ToDo key={toDo.id} {...toDo} />
+            ))}
+        </div>
+    );
 }
 
 // interface IForm {
@@ -35,17 +58,17 @@ function ToDoList() {
 //     return <div>
 //         <form style={{display: "flex", flexDirection: "column"}} onSubmit={handleSubmit(onVaild)}>
 //             <input {...register("email", {
-//                 required: "Email is required", 
+//                 required: "Email is required",
 //                 pattern: {value: /^[A-Za-z0-9._%+-]+@naver.com$/,
 //                                 message: "Only nave.com emails allowed"},
 //             })} placeholder="Email" />
 //             <span>{errors?.email?.message as string}</span>
 //             <input {...register("firstName", {
-//                 required: "write here", 
+//                 required: "write here",
 //                 validate: {
 //                     noNico: (value) => value.includes("nico") ? "no nicos allowed" : true,
 //                     noNick: (value) => value.includes("nick") ? "no nick allowed" : true,
-//                 }})} 
+//                 }})}
 //                 placeholder="FirstName" />
 //             {/* validate : { (value) => !value.includes("nico") || "error message"} */}
 //             <span>{errors?.firstName?.message as string}</span>

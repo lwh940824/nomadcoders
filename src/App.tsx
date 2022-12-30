@@ -30,7 +30,7 @@ function App() {
         console.log(info);
         const { destination, draggableId, source } = info;
         if (!destination) return;
-        if (destination.droppableId === source.droppableId) {
+        if (destination?.droppableId === source.droppableId) {
             // same board movement.
             setToDos((oldToDos) => {
                 const boardCopy = [...oldToDos[source.droppableId]];
@@ -39,6 +39,21 @@ function App() {
                 return {
                     ...oldToDos,
                     [source.droppableId]: boardCopy,
+                };
+            });
+        }
+        if (destination?.droppableId !== source.droppableId) {
+            console.log("is not same");
+            // cross board movement.
+            setToDos((allBoard) => {
+                const sourceBoard = [...allBoard[source.droppableId]];
+                const targetBoard = [...allBoard[destination?.droppableId]];
+                sourceBoard.splice(source.index, 1);
+                targetBoard.splice(destination?.index + 1, 0, draggableId);
+                return {
+                    ...allBoard,
+                    [source.droppableId]: sourceBoard,
+                    [destination.droppableId]: targetBoard,
                 };
             });
         }

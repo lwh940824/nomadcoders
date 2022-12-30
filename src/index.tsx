@@ -59,18 +59,20 @@ const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Source Sans Pro', sans-serif;
     background-color: ${(props) => props.theme.bgColor};
-    color: ${(props) => props.theme.textColor};
+    color: black;
   }
 `;
 
-const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+const root = ReactDOM.createRoot(
+    document.getElementById("root") as HTMLElement
+);
 root.render(
-  // <React.StrictMode>
-  <RecoilRoot>
-    <ThemeProvider theme={darkTheme}>
-      <GlobalStyle />
-      <App />
-    </ThemeProvider>
-  </RecoilRoot>
-  // </React.StrictMode>
+    // <React.StrictMode>
+    <RecoilRoot>
+        <ThemeProvider theme={darkTheme}>
+            <GlobalStyle />
+            <App />
+        </ThemeProvider>
+    </RecoilRoot>
+    // </React.StrictMode>
 );

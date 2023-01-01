@@ -1,7 +1,11 @@
+import { useForm } from "react-hook-form";
 import { Droppable } from "@hello-pangea/dnd";
 import { useRef } from "react";
 import styled from "styled-components";
 import DragabbleCard from "./DragabbleCard";
+import { inflateRaw } from "zlib";
+import { IToDo, toDoState } from "../atoms";
+import { useSetRecoilState } from "recoil";
 
 const Wrapper = styled.div`
     width: 300px;
@@ -29,29 +33,51 @@ const Area = styled.div<IAreaProps>`
     transition: background-color 0.3s ease-in-out;
     padding: 20px;
 `;
+const Form = styled.form`
+    width: 100%;
+    input {
+        width: 100%;
+    }
+`;
 
 interface IBoardProps {
-    toDos: string[];
+    toDos: IToDo[];
     boardId: string;
 }
 interface IAreaProps {
     isDraggingFromThis: boolean;
     isDraggingOver: boolean;
 }
+interface IForm {
+    toDo: string;
+}
 
 function Board({ toDos, boardId }: IBoardProps) {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const onClick = () => {
-        inputRef.current?.focus();
-        setTimeout(() => {
-            inputRef.current?.blur();
-        }, 5000);
+    const setToDos = useSetRecoilState(toDoState);
+    const { register, setValue, handleSubmit } = useForm<IForm>();
+    const onVaild = ({ toDo }: IForm) => {
+        const newToDo = {
+            id: Date.now(),
+            text: toDo,
+        };
+        setToDos((allBoards) => {
+            return {
+                ...allBoards,
+                [boardId]: [...allBoards[boardId], newToDo],
+            };
+        });
+        setValue("toDo", "");
     };
     return (
         <Wrapper>
             <Title>{boardId}</Title>
-            <input ref={inputRef} placeholder="grab me" />
-            <button onClick={onClick}>Click me</button>
+            <Form onSubmit={handleSubmit(onVaild)}>
+                <input
+                    {...register("toDo", { required: true })}
+                    type="text"
+                    placeholder={`Add task on ${boardId}`}
+                />
+            </Form>
             <Droppable droppableId={boardId}>
                 {(magic, info) => (
                     <Area
@@ -62,9 +88,10 @@ function Board({ toDos, boardId }: IBoardProps) {
                     >
                         {toDos.map((toDo, index) => (
                             <DragabbleCard
-                                key={toDo}
+                                key={toDo.id}
                                 index={index}
-                                toDo={toDo}
+                                toDoId={toDo.id}
+                                toDoText={toDo.text}
                             />
                         ))}
                         {magic.placeholder}

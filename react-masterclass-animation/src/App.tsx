@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `;
+tset;
 const BiggerBox = styled.div`
   width: 600px;
   height: 600px;

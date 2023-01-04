@@ -1,7 +1,8 @@
-import { RouterProvider } from "react-router-dom";
+import { Outlet, RouterProvider } from "react-router-dom";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Header from "./Components/Header";
-import { router } from "./Router";
+import router from "./Router";
+import Home from "./Routes/Home";
 import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
@@ -61,7 +62,8 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
   color:black;
   line-height: 1.2;
-  
+  color: ${(props) => props.theme.white.darker};
+  background-color: black;
 }
 a {
   text-decoration:none;
@@ -74,7 +76,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <GlobalStyle />
             <Header />
-            <RouterProvider router={router} />
+            <Outlet />
         </ThemeProvider>
     );
 }

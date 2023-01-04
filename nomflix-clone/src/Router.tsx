@@ -1,13 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
+import App from "./App";
 import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
     {
         path: "/",
-        element: <Home />,
+        element: <App />,
         children: [
+            {
+                path: "",
+                element: <Home />,
+            },
+            {
+                path: "movies/:movieId",
+                element: <Home />,
+            },
             {
                 path: "tv",
                 element: <Tv />,
@@ -19,3 +28,5 @@ export const router = createBrowserRouter([
         ],
     },
 ]);
+
+export default router;
